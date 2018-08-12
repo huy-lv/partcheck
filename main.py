@@ -12,7 +12,12 @@ class MainWindow1(QMainWindow):
     def __init__(self):  # ham khoi tao
         super(MainWindow1, self).__init__()  # gọi hàm khởi tạo của lớp cha
         loadUi('main_window.ui', self)  # load file giao dien
-        # self.image = None
+        # khởi tạo các giá trị
+        self.image = None
+        self.text = None
+        self.timer = None
+        self.capture = None
+
         self.btStart.clicked.connect(self.start_webcam)  # gán sự kiện click cho nút btStart
         self.btDetect.setCheckable(True)
         self.btDetect.toggled.connect(self.detect_webcam_motion)
@@ -30,13 +35,13 @@ class MainWindow1(QMainWindow):
             self.btDetect.setText('Detect motion')
 
     def set_motion_image(self):
-        grayImage = cv2.cvtColor(self.image.copy(), cv2.COLOR_BGR2GRAY)
-        grayImage = cv2.GaussianBlur(grayImage, (21, 21), 0)
-        self.motionFrame = grayImage
+        gray_image = cv2.cvtColor(self.image.copy(), cv2.COLOR_BGR2GRAY)
+        gray_image = cv2.GaussianBlur(gray_image, (21, 21), 0)
+        self.motionFrame = gray_image
         self.display_image(self.motionFrame, 2)
 
     def start_webcam(self):  # định nghĩa hàm bật cam
-        self.capture = cv2.VideoCapture(0)  # lấy hinhf ảnh từ camera 0
+        self.capture = cv2.VideoCapture(0)  # lấy hình ảnh từ camera 0
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # set chiều cao
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # set chiều rộng
 
@@ -55,10 +60,10 @@ class MainWindow1(QMainWindow):
 
     def detect_motion(self, input_img):
         self.text = 'No motion'
-        grayImage = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
-        grayImage = cv2.GaussianBlur(grayImage, (21, 21), 0)
-        frameDiff = cv2.absdiff(self.motionFrame, grayImage)
-        thresh = cv2.threshold(frameDiff, 40, 255, cv2.THRESH_BINARY)[1]
+        gray_image = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
+        gray_image = cv2.GaussianBlur(gray_image, (21, 21), 0)
+        frame_diff = cv2.absdiff(self.motionFrame, gray_image)
+        thresh = cv2.threshold(frame_diff, 40, 255, cv2.THRESH_BINARY)[1]
         thresh = cv2.dilate(thresh, None, iterations=5)
         im2, contour, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         try:
@@ -72,11 +77,15 @@ class MainWindow1(QMainWindow):
             (x, y, w, h) = cv2.boundingRect(ct)
             min_x, max_x = min(x, min_x), max(x + w, max_x)
             min_y, max_y = min(y, min_y), max(y + h, max_y)
-        if max_x - min_x > 80 and max_y - min_y > 80:
-            cv2.rectangle(input_img, (min_x, min_y), (max_x, max_y), (0, 255, 0), 2)
-            self.text = 'motion detected'
+            self.lb1.setText(str(x) + ' ' + str(y))
+            cv2.rectangle(input_img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        # if max_x - min_x > 80 and max_y - min_y > 80:
+        #     cv2.rectangle(input_img, (min_x, min_y), (max_x, max_y), (0, 255, 0), 2)
+        #     self.text = 'motion detected'
         cv2.putText(input_img, 'motion status: {}'.format(self.text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
                     (0, 0, 255), 2)
+
         return input_img
 
     def display_image(self, img, window=1):
@@ -95,6 +104,7 @@ class MainWindow1(QMainWindow):
         if window == 2:
             self.vidRefer.setPixmap(QPixmap.fromImage(out_image))
             self.vidRefer.setScaledContents(True)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
