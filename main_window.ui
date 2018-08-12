@@ -6,28 +6,28 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+       <width>1005</width>
+       <height>616</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="startButton">
+      <widget class="QPushButton" name="btStart">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>30</y>
-      <width>75</width>
-      <height>23</height>
+         <x>50</x>
+         <y>10</y>
+         <width>112</width>
+         <height>34</height>
      </rect>
     </property>
     <property name="text">
      <string>Start camera</string>
     </property>
    </widget>
-   <widget class="QLabel" name="imgLabel">
+      <widget class="QLabel" name="vidMain">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -36,21 +36,63 @@
       <height>480</height>
      </rect>
     </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
+          <property name="frameShape">
+              <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+              <string/>
+          </property>
+      </widget>
+      <widget class="QPushButton" name="btRefer">
+          <property name="geometry">
+              <rect>
+                  <x>190</x>
+                  <y>10</y>
+                  <width>119</width>
+                  <height>34</height>
+              </rect>
+          </property>
+          <property name="text">
+              <string>Set refer image</string>
+          </property>
+      </widget>
+      <widget class="QPushButton" name="btDetect">
+          <property name="geometry">
+              <rect>
+                  <x>340</x>
+                  <y>10</y>
+                  <width>112</width>
+                  <height>34</height>
+              </rect>
+          </property>
+          <property name="text">
+              <string>Detect motion</string>
+          </property>
+      </widget>
+      <widget class="QLabel" name="vidRefer">
+          <property name="geometry">
+              <rect>
+                  <x>680</x>
+                  <y>60</y>
+                  <width>256</width>
+                  <height>184</height>
+              </rect>
+          </property>
+          <property name="frameShape">
+              <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+              <string/>
+          </property>
+      </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>21</height>
+        <width>1005</width>
+        <height>31</height>
     </rect>
    </property>
   </widget>
