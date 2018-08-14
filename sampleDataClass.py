@@ -1,4 +1,5 @@
 import cv2
+import numpy
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QDialog
@@ -28,15 +29,9 @@ class SampleDataWindow(QDialog):
         self.image = cv2.flip(self.image, 1)
         self.display_image(self.image, self.vid_sample_camera)
 
-    def display_image(self, img, imageBox):
-        qformat = QImage.Format_Indexed8
-        if len(img.shape) == 3:
-            if img.shape[2] == 4:
-                qformat = QImage.Format_RGBA8888
-            else:
-                qformat = QImage.Format_RGB888
-        out_image = QImage(img, img.shape[1], img.shape[0], img.strides[0], qformat)
-
+    @staticmethod
+    def display_image(img, imageBox):
+        out_image = SampleDataWindow.convertDArrayToImage(img)
         out_image = out_image.rgbSwapped()
         # if window == 1:
         imageBox.setPixmap(QPixmap.fromImage(out_image))
@@ -47,6 +42,18 @@ class SampleDataWindow(QDialog):
         # elif window == 2:
         #     self.imSample1.setPixmap(QPixmap.fromImage(out_image))
         #     self.imSample1.setScaledContents(True)
+
+    @staticmethod
+    def convertDArrayToImage(img):
+        assert type(img) is numpy.ndarray
+        qformat = QImage.Format_Indexed8
+        if len(img.shape) == 3:
+            if img.shape[2] == 4:
+                qformat = QImage.Format_RGBA8888
+            else:
+                qformat = QImage.Format_RGB888
+        return QImage(img, img.shape[1], img.shape[0], img.strides[0], qformat)
+
 
     def print(self):
         print("sssss")
