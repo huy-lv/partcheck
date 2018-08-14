@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
        <width>1005</width>
-       <height>616</height>
+       <height>737</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,17 +85,17 @@
               <string/>
           </property>
       </widget>
-      <widget class="QLabel" name="lb1">
+      <widget class="QLabel" name="lbStatus">
           <property name="geometry">
               <rect>
                   <x>680</x>
                   <y>270</y>
-                  <width>68</width>
+                  <width>281</width>
                   <height>19</height>
               </rect>
           </property>
           <property name="text">
-              <string>TextLabel</string>
+              <string>Chua co du lieu mau</string>
           </property>
       </widget>
       <widget class="QLabel" name="lb2">
@@ -111,6 +111,99 @@
               <string>TextLabel</string>
           </property>
       </widget>
+      <widget class="QPushButton" name="btOpenSampleDataWindow">
+          <property name="geometry">
+              <rect>
+                  <x>500</x>
+                  <y>10</y>
+                  <width>111</width>
+                  <height>31</height>
+              </rect>
+          </property>
+          <property name="text">
+              <string>Tao du lieu mau</string>
+          </property>
+      </widget>
+      <widget class="QLabel" name="imReal1">
+          <property name="geometry">
+              <rect>
+                  <x>20</x>
+                  <y>560</y>
+                  <width>160</width>
+                  <height>120</height>
+              </rect>
+          </property>
+          <property name="frameShape">
+              <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+              <string/>
+          </property>
+      </widget>
+      <widget class="QLabel" name="imReal2">
+          <property name="geometry">
+              <rect>
+                  <x>190</x>
+                  <y>560</y>
+                  <width>160</width>
+                  <height>120</height>
+              </rect>
+          </property>
+          <property name="frameShape">
+              <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+              <string/>
+          </property>
+      </widget>
+      <widget class="QLabel" name="imReal1_3">
+          <property name="geometry">
+              <rect>
+                  <x>360</x>
+                  <y>560</y>
+                  <width>160</width>
+                  <height>120</height>
+              </rect>
+          </property>
+          <property name="frameShape">
+              <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+              <string/>
+          </property>
+      </widget>
+      <widget class="QLabel" name="imReal1_4">
+          <property name="geometry">
+              <rect>
+                  <x>530</x>
+                  <y>560</y>
+                  <width>160</width>
+                  <height>120</height>
+              </rect>
+          </property>
+          <property name="frameShape">
+              <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+              <string/>
+          </property>
+      </widget>
+      <widget class="QLabel" name="imReal1_5">
+          <property name="geometry">
+              <rect>
+                  <x>700</x>
+                  <y>560</y>
+                  <width>160</width>
+                  <height>120</height>
+              </rect>
+          </property>
+          <property name="frameShape">
+              <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+              <string/>
+          </property>
+      </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -118,7 +211,7 @@
      <x>0</x>
      <y>0</y>
         <width>1005</width>
-        <height>31</height>
+        <height>21</height>
     </rect>
    </property>
   </widget>

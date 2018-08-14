@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>newDialog</class>
+    <widget class="QDialog" name="newDialog">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>711</width>
+                <height>436</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Dialog</string>
+        </property>
+        <widget class="QPushButton" name="bt_sample_start">
+            <property name="geometry">
+                <rect>
+                    <x>390</x>
+                    <y>20</y>
+                    <width>101</width>
+                    <height>41</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Bat dau</string>
+            </property>
+        </widget>
+        <widget class="QLabel" name="vid_sample_camera">
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>320</width>
+                    <height>240</height>
+                </rect>
+            </property>
+            <property name="frameShape">
+                <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+                <string/>
+            </property>
+        </widget>
+        <widget class="QLabel" name="imSample1">
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>260</y>
+                    <width>128</width>
+                    <height>96</height>
+                </rect>
+            </property>
+            <property name="frameShape">
+                <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+                <string/>
+            </property>
+        </widget>
+        <widget class="QLabel" name="imSample2">
+            <property name="geometry">
+                <rect>
+                    <x>150</x>
+                    <y>260</y>
+                    <width>128</width>
+                    <height>96</height>
+                </rect>
+            </property>
+            <property name="frameShape">
+                <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+                <string/>
+            </property>
+        </widget>
+        <widget class="QLabel" name="imSample3">
+            <property name="geometry">
+                <rect>
+                    <x>290</x>
+                    <y>260</y>
+                    <width>128</width>
+                    <height>96</height>
+                </rect>
+            </property>
+            <property name="frameShape">
+                <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+                <string/>
+            </property>
+        </widget>
+        <widget class="QLabel" name="imSample4">
+            <property name="geometry">
+                <rect>
+                    <x>430</x>
+                    <y>260</y>
+                    <width>128</width>
+                    <height>96</height>
+                </rect>
+            </property>
+            <property name="frameShape">
+                <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+                <string/>
+            </property>
+        </widget>
+        <widget class="QLabel" name="imSample5">
+            <property name="geometry">
+                <rect>
+                    <x>570</x>
+                    <y>260</y>
+                    <width>128</width>
+                    <height>96</height>
+                </rect>
+            </property>
+            <property name="frameShape">
+                <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+                <string/>
+            </property>
+        </widget>
+        <widget class="QPushButton" name="btDone">
+            <property name="geometry">
+                <rect>
+                    <x>390</x>
+                    <y>80</y>
+                    <width>101</width>
+                    <height>41</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Xong</string>
+            </property>
+        </widget>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>

@@ -1,10 +1,15 @@
 import sys
+import threading
+import time
 
 import cv2
+import serial
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.uic import loadUi
+
+from sampleDataClass import SampleDataWindow
 
 
 class MainWindow1(QMainWindow):
@@ -17,6 +22,8 @@ class MainWindow1(QMainWindow):
         self.text = None
         self.timer = None
         self.capture = None
+        self.sample_data = [None] * 5
+        self.currentIndex = 0
 
         self.btStart.clicked.connect(self.start_webcam)  # gán sự kiện click cho nút btStart
         self.btDetect.setCheckable(True)
@@ -25,6 +32,51 @@ class MainWindow1(QMainWindow):
 
         self.btRefer.clicked.connect(self.set_motion_image)
         self.motionFrame = None
+        self.btOpenSampleDataWindow.clicked.connect(self.openSampleDataWindow)
+        self.sensorData = serial.Serial('COM4', 9600)
+        thread = threading.Thread(target=self.readSensor, args=())
+        thread.start()
+
+    def readSensor(self):
+        while True:
+            while (self.sensorData.inWaiting() == 0):
+                pass
+            textline = str(self.sensorData.readline())
+            print(textline)
+            if textline == 'b\'CHUP ANH 1 \\n\'':
+                self.sample_data[0] = self.cvtColorAndBlur()
+                self.sampleDataDialog.display_image(self.sample_data[0], self.sampleDataDialog.imSample1)
+            if textline == 'b\'CHUP ANH 2 \\n\'':
+                self.sample_data[1] = self.cvtColorAndBlur()
+                self.sampleDataDialog.display_image(self.sample_data[1], self.sampleDataDialog.imSample2)
+            if textline == 'b\'CHUP ANH 3 \\n\'':
+                self.sample_data[2] = self.cvtColorAndBlur()
+                self.sampleDataDialog.display_image(self.sample_data[2], self.sampleDataDialog.imSample3)
+            if textline == 'b\'CHUP ANH 4 \\n\'':
+                self.sample_data[3] = self.cvtColorAndBlur()
+                self.sampleDataDialog.display_image(self.sample_data[3], self.sampleDataDialog.imSample4)
+            if textline == 'b\'CHUP ANH 5 \\n\'':
+                self.sample_data[4] = self.cvtColorAndBlur()
+                self.sampleDataDialog.display_image(self.sample_data[4], self.sampleDataDialog.imSample5)
+            time.sleep(0.5)
+
+    def cvtColorAndBlur(self):
+        gray_image = cv2.cvtColor(self.sampleDataDialog.image.copy(), cv2.COLOR_BGR2GRAY)
+        return cv2.GaussianBlur(gray_image, (11, 11), 0)
+
+    def onClickDone(self):
+        containNone = False
+        for item in self.sample_data:
+            if item is None:
+                containNone = True
+        if not containNone:
+            self.lbStatus.setText('Da co du lieu mau')
+        self.sampleDataDialog.close()
+
+    def openSampleDataWindow(self):
+        self.sampleDataDialog = SampleDataWindow()
+        self.sampleDataDialog.show()
+        self.sampleDataDialog.btDone.clicked.connect(self.onClickDone)
 
     def detect_webcam_motion(self, status):
         if status:
@@ -41,7 +93,7 @@ class MainWindow1(QMainWindow):
         self.display_image(self.motionFrame, 2)
 
     def start_webcam(self):  # định nghĩa hàm bật cam
-        self.capture = cv2.VideoCapture(0)  # lấy hình ảnh từ camera 0
+        self.capture = cv2.VideoCapture(1)  # lấy hình ảnh từ camera 0
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # set chiều cao
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # set chiều rộng
 
@@ -52,17 +104,18 @@ class MainWindow1(QMainWindow):
     def update_frame(self):
         ret, self.image = self.capture.read()
         self.image = cv2.flip(self.image, 1)
-        if self.motion_enabled:
-            detected_motion = self.detect_motion(self.image.copy())
-            self.display_image(detected_motion, 1)
-        else:
-            self.display_image(self.image, 1)
+        # if self.motion_enabled:
+        # if(self.currentIndex > )
+        detected_motion = self.detect_motion(self.image.copy(), self.motionFrame)
+        self.display_image(detected_motion, 1)
+        # else:
+        #     self.display_image(self.image, 1)
 
-    def detect_motion(self, input_img):
+    def detect_motion(self, input_img, compareImage):
         self.text = 'No motion'
         gray_image = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
         gray_image = cv2.GaussianBlur(gray_image, (21, 21), 0)
-        frame_diff = cv2.absdiff(self.motionFrame, gray_image)
+        frame_diff = cv2.absdiff(compareImage, gray_image)
         thresh = cv2.threshold(frame_diff, 40, 255, cv2.THRESH_BINARY)[1]
         thresh = cv2.dilate(thresh, None, iterations=5)
         im2, contour, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -111,4 +164,5 @@ if __name__ == '__main__':
     window = MainWindow1()
     window.setWindowTitle('Hellooooooooooooo')
     window.show()
+    app.setQuitOnLastWindowClosed(True)
     sys.exit(app.exec_())
