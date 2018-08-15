@@ -29,17 +29,14 @@ class MainWindow1(QMainWindow):
         self.errorList = [0] * 5
 
         self.btStart.clicked.connect(self.start_webcam)  # gán sự kiện click cho nút btStart
-        self.btDetect.setCheckable(True)
-        self.btDetect.toggled.connect(self.detect_webcam_motion)
         self.motion_enabled = False
 
-        self.btRefer.clicked.connect(self.set_motion_image)
+        self.btStop.clicked.connect(self.stopCamera)
         self.motionFrame = None
         self.btOpenSampleDataWindow.clicked.connect(self.openSampleDataWindow)
         self.sensorData = serial.Serial('COM4', 9600)
         thread = threading.Thread(target=self.readSensorCreateSampleData, args=())
         thread.start()
-        self.btToggle.clicked.connect(self.onToggle)
         self.imRealList = [self.imReal1, self.imReal2, self.imReal3, self.imReal4, self.imReal5]
         self.lbErrorList = [self.lbError1, self.lbError2, self.lbError3, self.lbError4, self.lbError5]
 
@@ -79,7 +76,11 @@ class MainWindow1(QMainWindow):
                     SampleDataWindow.display_image(detect_motion, self.imRealList[currentIndex - 1])
                     print(self.errorList)
                     self.lbErrorList[currentIndex - 1].setText(str(self.errorList[currentIndex - 1]) + ' lỗi')
-                    self.currentIndex = currentIndex
+                    if currentIndex == 5:
+                        self.currentIndex = 0  # restart vong lap
+                    else:
+                        self.currentIndex = currentIndex
+
 
             time.sleep(0.5)
 
@@ -113,16 +114,11 @@ class MainWindow1(QMainWindow):
     def detect_webcam_motion(self, status):
         if status:
             self.motion_enabled = True
-            self.btDetect.setText('Stop motion')
         else:
             self.motion_enabled = False
-            self.btDetect.setText('Detect motion')
 
-    def set_motion_image(self):
-        gray_image = cv2.cvtColor(self.image.copy(), cv2.COLOR_BGR2GRAY)
-        gray_image = cv2.GaussianBlur(gray_image, (21, 21), 0)
-        self.motionFrame = gray_image
-        self.display_image(self.motionFrame, 2)
+    def stopCamera(self):
+        self.timer.stop()
 
     def start_webcam(self):  # định nghĩa hàm bật cam
         if self.isCreatingSample:
@@ -198,9 +194,9 @@ class MainWindow1(QMainWindow):
             self.vidRefer.setPixmap(QPixmap.fromImage(out_image))
             self.vidRefer.setScaledContents(True)
 
-    def onToggle(self):
-        self.isCreatingSample = not self.isCreatingSample
-        self.btToggle.setText('creating sample' if self.isCreatingSample else 'check product')
+    # def onToggle(self):
+    #     self.isCreatingSample = not self.isCreatingSample
+    #     self.btToggle.setText('creating sample' if self.isCreatingSample else 'check product')
 
 
 if __name__ == '__main__':
