@@ -1,10 +1,8 @@
 import sys
-import threading
 import time
 
 import cv2
 import numpy
-import serial
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
@@ -34,11 +32,16 @@ class MainWindow1(QMainWindow):
         self.btStop.clicked.connect(self.stopCamera)
         self.motionFrame = None
         self.btOpenSampleDataWindow.clicked.connect(self.openSampleDataWindow)
-        self.sensorData = serial.Serial('COM4', 9600)
-        thread = threading.Thread(target=self.readSensorCreateSampleData, args=())
-        thread.start()
+        # self.sensorData = serial.Serial('COM4', 9600)
+        # thread = threading.Thread(target=self.readSensorCreateSampleData, args=())
+        # thread.start()
         self.imRealList = [self.imReal1, self.imReal2, self.imReal3, self.imReal4, self.imReal5]
         self.lbErrorList = [self.lbError1, self.lbError2, self.lbError3, self.lbError4, self.lbError5]
+        for i in range(10):
+            self.cbSelectCom.addItem(str(i + 1))
+
+    def saveSetting(self):
+        self.cbSelectCom.addItem('1')
 
     # def closeEvent(self, event):
     #     print ("User has clicked the red x on the main window")
@@ -143,7 +146,6 @@ class MainWindow1(QMainWindow):
         # self.display_image(detected_motion, 1)
         # else:
         self.display_image(self.image, 1)
-
     def detect_motion(self, input_img, compareImage):
         assert type(input_img) is numpy.ndarray
         assert type(compareImage) is numpy.ndarray
@@ -202,7 +204,7 @@ class MainWindow1(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow1()
-    window.setWindowTitle('Hellooooooooooooo')
+    window.setWindowTitle('ktfv')
     window.show()
     app.setQuitOnLastWindowClosed(True)
     sys.exit(app.exec_())

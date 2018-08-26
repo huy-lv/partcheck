@@ -326,6 +326,65 @@
               <string>0 lỗi</string>
           </property>
       </widget>
+      <widget class="QComboBox" name="cbSelectCom">
+          <property name="geometry">
+              <rect>
+                  <x>800</x>
+                  <y>290</y>
+                  <width>111</width>
+                  <height>22</height>
+              </rect>
+          </property>
+      </widget>
+      <widget class="QLabel" name="label_6">
+          <property name="geometry">
+              <rect>
+                  <x>690</x>
+                  <y>290</y>
+                  <width>91</width>
+                  <height>21</height>
+              </rect>
+          </property>
+          <property name="text">
+              <string>Chọn cổng COM</string>
+          </property>
+      </widget>
+      <widget class="QLabel" name="label_7">
+          <property name="geometry">
+              <rect>
+                  <x>690</x>
+                  <y>333</y>
+                  <width>71</width>
+                  <height>20</height>
+              </rect>
+          </property>
+          <property name="text">
+              <string>Chọn camera</string>
+          </property>
+      </widget>
+      <widget class="QComboBox" name="cbSelectCam">
+          <property name="geometry">
+              <rect>
+                  <x>800</x>
+                  <y>330</y>
+                  <width>111</width>
+                  <height>22</height>
+              </rect>
+          </property>
+      </widget>
+      <widget class="QPushButton" name="btSaveSetting">
+          <property name="geometry">
+              <rect>
+                  <x>800</x>
+                  <y>380</y>
+                  <width>111</width>
+                  <height>23</height>
+              </rect>
+          </property>
+          <property name="text">
+              <string>Lưu</string>
+          </property>
+      </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
