@@ -329,9 +329,9 @@
       <widget class="QComboBox" name="cbSelectCom">
           <property name="geometry">
               <rect>
-                  <x>800</x>
+                  <x>840</x>
                   <y>290</y>
-                  <width>111</width>
+                  <width>71</width>
                   <height>22</height>
               </rect>
           </property>
@@ -341,7 +341,7 @@
               <rect>
                   <x>690</x>
                   <y>290</y>
-                  <width>91</width>
+                  <width>121</width>
                   <height>21</height>
               </rect>
           </property>
@@ -354,7 +354,7 @@
               <rect>
                   <x>690</x>
                   <y>333</y>
-                  <width>71</width>
+                  <width>121</width>
                   <height>20</height>
               </rect>
           </property>
@@ -365,9 +365,9 @@
       <widget class="QComboBox" name="cbSelectCam">
           <property name="geometry">
               <rect>
-                  <x>800</x>
+                  <x>840</x>
                   <y>330</y>
-                  <width>111</width>
+                  <width>71</width>
                   <height>22</height>
               </rect>
           </property>
@@ -392,7 +392,7 @@
      <x>0</x>
      <y>0</y>
         <width>1005</width>
-        <height>21</height>
+        <height>31</height>
     </rect>
    </property>
   </widget>

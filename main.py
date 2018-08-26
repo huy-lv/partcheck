@@ -1,8 +1,10 @@
 import sys
+import threading
 import time
 
 import cv2
 import numpy
+import serial
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
@@ -25,23 +27,34 @@ class MainWindow1(QMainWindow):
         self.currentIndex = 0
         self.isCreatingSample = True
         self.errorList = [0] * 5
-
+        self.cameraIndex = 0
         self.btStart.clicked.connect(self.start_webcam)  # gán sự kiện click cho nút btStart
         self.motion_enabled = False
-
+        self.sensorData = None
         self.btStop.clicked.connect(self.stopCamera)
         self.motionFrame = None
         self.btOpenSampleDataWindow.clicked.connect(self.openSampleDataWindow)
-        # self.sensorData = serial.Serial('COM4', 9600)
-        # thread = threading.Thread(target=self.readSensorCreateSampleData, args=())
-        # thread.start()
+        self.btSaveSetting.clicked.connect(self.save_setting)
         self.imRealList = [self.imReal1, self.imReal2, self.imReal3, self.imReal4, self.imReal5]
         self.lbErrorList = [self.lbError1, self.lbError2, self.lbError3, self.lbError4, self.lbError5]
         for i in range(10):
             self.cbSelectCom.addItem(str(i + 1))
+        for i in range(3):
+            self.cbSelectCam.addItem(str(i))
+        self.cbSelectCam.setCurrentIndex(1)
 
-    def saveSetting(self):
-        self.cbSelectCom.addItem('1')
+    def save_setting(self):
+        # set com port
+        try:
+            self.sensorData = serial.Serial('COM' + self.cbSelectCom.currentText(), 9600)
+            thread = threading.Thread(target=self.readSensorCreateSampleData, args=())
+            thread.start()
+        except serial.serialutil.SerialException as e:
+            q = QMessageBox()
+            q.setText('Lỗi: ' + str(e))
+            q.exec()
+        # set camera
+        self.cameraIndex = int(self.cbSelectCam.currentText())
 
     # def closeEvent(self, event):
     #     print ("User has clicked the red x on the main window")
@@ -83,7 +96,6 @@ class MainWindow1(QMainWindow):
                         self.currentIndex = 0  # restart vong lap
                     else:
                         self.currentIndex = currentIndex
-
 
             time.sleep(0.5)
 
@@ -129,13 +141,18 @@ class MainWindow1(QMainWindow):
             q.setText('Ban chua co du lieu mau!')
             q.exec()
         else:
-            self.capture = cv2.VideoCapture(1)  # lấy hình ảnh từ camera 0
-            self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # set chiều cao
-            self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # set chiều rộng
+            try:
+                self.capture = cv2.VideoCapture(self.cameraIndex)  # lấy hình ảnh từ camera 0
+                self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # set chiều cao
+                self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # set chiều rộng
 
-            self.timer = QTimer(self)
-            self.timer.timeout.connect(self.update_frame)
-            self.timer.start(15)
+                self.timer = QTimer(self)
+                self.timer.timeout.connect(self.update_frame)
+                self.timer.start(15)
+            except:
+                q1 = QMessageBox()
+                q1.setText('Lỗi: ')
+                q1.exec()
 
     def update_frame(self):
         ret, self.image = self.capture.read()
@@ -146,6 +163,7 @@ class MainWindow1(QMainWindow):
         # self.display_image(detected_motion, 1)
         # else:
         self.display_image(self.image, 1)
+
     def detect_motion(self, input_img, compareImage):
         assert type(input_img) is numpy.ndarray
         assert type(compareImage) is numpy.ndarray
