@@ -55,6 +55,9 @@ class MainWindow1(QMainWindow):
             q.exec()
         # set camera
         self.cameraIndex = int(self.cbSelectCam.currentText())
+        q1 = QMessageBox()
+        q1.setText('Lưu thành công')
+        q1.exec()
 
     # def closeEvent(self, event):
     #     print ("User has clicked the red x on the main window")
@@ -151,7 +154,7 @@ class MainWindow1(QMainWindow):
                 self.timer.start(15)
             except:
                 q1 = QMessageBox()
-                q1.setText('Lỗi: ')
+                q1.setText('Lỗi camera ')
                 q1.exec()
 
     def update_frame(self):
