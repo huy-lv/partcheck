@@ -2,13 +2,21 @@ import cv2
 import numpy
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.uic import loadUi
 
 
 class SampleDataWindow(QDialog):
     def __init__(self):  # ham khoi tao
         super(SampleDataWindow, self).__init__()  # gọi hàm khởi tạo của lớp cha
+        self.init()
+
+    def __init__(self, cameraIndex):
+        super(SampleDataWindow, self).__init__()
+        self.init()
+        self.cameraIndex = cameraIndex
+
+    def init(self):
         loadUi('sampleData.ui', self)  # load file giao dien
         self.bt_sample_start.clicked.connect(self.start_webcam)
         self.timer = None
@@ -16,7 +24,7 @@ class SampleDataWindow(QDialog):
         self.capture = None
 
     def start_webcam(self):  # định nghĩa hàm bật cam
-        self.capture = cv2.VideoCapture(1)  # lấy hình ảnh từ camera 0
+        self.capture = cv2.VideoCapture(0)  # lấy hình ảnh từ camera 0
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # set chiều cao
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # set chiều rộng
 
@@ -25,9 +33,15 @@ class SampleDataWindow(QDialog):
         self.timer.start(15)
 
     def update_frame(self):
+        # try:
         ret, self.image = self.capture.read()
         self.image = cv2.flip(self.image, 1)
         self.display_image(self.image, self.vid_sample_camera)
+        # except:
+        #     self.timer.stop()
+        #     q = QMessageBox()
+        #     q.setText('Lỗi camera')
+        #     q.exec()
 
     @staticmethod
     def display_image(img, imageBox):
@@ -53,7 +67,3 @@ class SampleDataWindow(QDialog):
             else:
                 qformat = QImage.Format_RGB888
         return QImage(img, img.shape[1], img.shape[0], img.strides[0], qformat)
-
-
-    def print(self):
-        print("sssss")

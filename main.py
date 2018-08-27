@@ -42,22 +42,25 @@ class MainWindow1(QMainWindow):
         for i in range(3):
             self.cbSelectCam.addItem(str(i))
         self.cbSelectCam.setCurrentIndex(1)
+        self.leThreshold.setText(str(40))
 
     def save_setting(self):
-        # set com port
         try:
+            self.threshold = int(self.leThreshold.displayText())
+            print(self.threshold)
+            # set com port
             self.sensorData = serial.Serial('COM' + self.cbSelectCom.currentText(), 9600)
             thread = threading.Thread(target=self.readSensorCreateSampleData, args=())
             thread.start()
+            # set camera
+            self.cameraIndex = int(self.cbSelectCam.currentText())
+            q1 = QMessageBox()
+            q1.setText('Lưu thành công')
+            q1.exec()
         except serial.serialutil.SerialException as e:
             q = QMessageBox()
             q.setText('Lỗi: ' + str(e))
             q.exec()
-        # set camera
-        self.cameraIndex = int(self.cbSelectCam.currentText())
-        q1 = QMessageBox()
-        q1.setText('Lưu thành công')
-        q1.exec()
 
     # def closeEvent(self, event):
     #     print ("User has clicked the red x on the main window")
@@ -125,7 +128,7 @@ class MainWindow1(QMainWindow):
         self.sampleDataDialog.close()
 
     def openSampleDataWindow(self):
-        self.sampleDataDialog = SampleDataWindow()
+        self.sampleDataDialog = SampleDataWindow(self.cameraIndex)
         self.sampleDataDialog.show()
         self.sampleDataDialog.btDone.clicked.connect(self.onClickDone)
 
@@ -144,28 +147,24 @@ class MainWindow1(QMainWindow):
             q.setText('Ban chua co du lieu mau!')
             q.exec()
         else:
-            try:
-                self.capture = cv2.VideoCapture(self.cameraIndex)  # lấy hình ảnh từ camera 0
-                self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # set chiều cao
-                self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # set chiều rộng
+            self.capture = cv2.VideoCapture(self.cameraIndex)  # lấy hình ảnh từ camera 0
+            self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # set chiều cao
+            self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # set chiều rộng
 
-                self.timer = QTimer(self)
-                self.timer.timeout.connect(self.update_frame)
-                self.timer.start(15)
-            except:
-                q1 = QMessageBox()
-                q1.setText('Lỗi camera ')
-                q1.exec()
+            self.timer = QTimer(self)
+            self.timer.timeout.connect(self.update_frame)
+            self.timer.start(15)
 
     def update_frame(self):
-        ret, self.image = self.capture.read()
-        self.image = cv2.flip(self.image, 1)
-        # if self.motion_enabled:
-        # if(self.currentIndex > )
-        # detected_motion = self.detect_motion(self.image.copy(), self.motionFrame)
-        # self.display_image(detected_motion, 1)
-        # else:
-        self.display_image(self.image, 1)
+        try:
+            ret, self.image = self.capture.read()
+            self.image = cv2.flip(self.image, 1)
+            self.display_image(self.image, 1)
+        except:
+            self.timer.stop()
+            q = QMessageBox()
+            q.setText('Lỗi camera')
+            q.exec()
 
     def detect_motion(self, input_img, compareImage):
         assert type(input_img) is numpy.ndarray
@@ -174,7 +173,7 @@ class MainWindow1(QMainWindow):
         image1ToCompare = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
 
         frame_diff = cv2.absdiff(compareImage, image1ToCompare)
-        thresh = cv2.threshold(frame_diff, 40, 255, cv2.THRESH_BINARY)[1]
+        thresh = cv2.threshold(frame_diff, self.threshold, 255, cv2.THRESH_BINARY)[1]
         thresh = cv2.dilate(thresh, None, iterations=5)
         im2, contour, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         try:
